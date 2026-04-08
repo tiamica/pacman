@@ -5,7 +5,7 @@ FROM node:18-alpine AS builder
 RUN apk add --no-cache git
 
 # Clone the repo
-git clone https://github.com/Call0us-cherry/pacman1.git /app/. 
+RUN git clone https://github.com/Call0us-cherry/pacman1.git /app/. 
 
 WORKDIR /app
 
