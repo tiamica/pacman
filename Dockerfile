@@ -1,6 +1,9 @@
 FROM node:18-alpine
 
-WORKDIR /.
+# Install git (required by some npm dependencies)
+RUN apk add --no-cache git
+
+WORKDIR /app
 
 # Copy package files and install dependencies
 COPY package*.json ./
@@ -13,7 +16,7 @@ COPY . .
 RUN sed -i '5,6s/schema: {/schema: {\n        lookAtTarget: {default: true},/' node_modules/aframe-extras/src/pathfinding/nav-agent.js && \
     sed -i '83s/if (data.lookAtTarget)/if (data.lookAtTarget)/' node_modules/aframe-extras/src/pathfinding/nav-agent.js
 
-# Expose the port used by webpack-dev-server (default 8080)
+# Expose the port used by webpack-dev-server
 EXPOSE 8080
 
 # Start the development server, binding to 0.0.0.0 to allow external access
