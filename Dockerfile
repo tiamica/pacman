@@ -3,7 +3,7 @@ FROM node:18-alpine
 # Install git (required by some npm dependencies)
 RUN apk add --no-cache git
 
-WORKDIR /app
+WORKDIR /.
 
 # Copy package files and install dependencies
 COPY package*.json ./
@@ -19,5 +19,5 @@ RUN sed -i '5,6s/schema: {/schema: {\n        lookAtTarget: {default: true},/' n
 # Expose the port used by webpack-dev-server
 EXPOSE 8080
 
-# Start the development server with host binding and allowed hosts
-CMD ["npm", "start", "--", "--host", "0.0.0.0", "--allowed-hosts", "all"]
+# Allow any host header (disable host check)
+RUN sed -i '/devServer: {/a \    allowedHosts: "all",' webpack.config.js
