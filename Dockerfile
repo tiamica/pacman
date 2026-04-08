@@ -32,6 +32,10 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/index.html ./
 COPY --from=builder /app/index.css ./
+COPY --from=builder /app/assets ./assets
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/webpack.config.js ./
+COPY --from=builder /app/src ./src
 
 # Use the PORT environment variable provided by Cloud Run (default 8080)
 ENV PORT=8080
