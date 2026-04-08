@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 # Clone the repo
 RUN git clone https://github.com/jjoannarachel/pacman3.git
-RUN cp -R pacman1/* /app/.
+RUN cp -R pacman3/* /app/.
 
 # Apply the required "hack" to aframe-extras
 #RUN sed -i '5,6s/schema: {/schema: {\n        lookAtTarget: {default: true},/' node_modules/aframe-extras/src/pathfinding/nav-agent.js && \
