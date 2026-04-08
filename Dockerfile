@@ -4,6 +4,9 @@ FROM node:18-alpine AS builder
 # Install git (required for some dependencies)
 RUN apk add --no-cache git
 
+# Clone the repo
+git clone https://github.com/Call0us-cherry/pacman1.git /app/. 
+
 WORKDIR /app
 
 # Copy package files and install dependencies
