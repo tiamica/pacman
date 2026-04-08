@@ -17,10 +17,10 @@ COPY . .
 RUN sed -i '5,6s/schema: {/schema: {\n        lookAtTarget: {default: true},/' node_modules/aframe-extras/src/pathfinding/nav-agent.js && \
     sed -i '83s/if (data.lookAtTarget)/if (data.lookAtTarget)/' node_modules/aframe-extras/src/pathfinding/nav-agent.js
 
-# Build the production bundle
+# Build the production bundle (outputs to dist/ or similar)
 RUN npm run build
 
-# Stage 2: Serve static files with a minimal web server
+# Stage 2: Serve the application
 FROM node:18-alpine
 
 # Install a lightweight static server
@@ -28,8 +28,10 @@ RUN npm install -g serve
 
 WORKDIR /app
 
-# Copy the built files from the builder stage
-COPY --from=builder /app/dist .
+# Copy the built assets (dist folder) and the root HTML/CSS files
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/index.html ./
+COPY --from=builder /app/index.css ./
 
 # Use the PORT environment variable provided by Cloud Run (default 8080)
 ENV PORT=8080
@@ -37,5 +39,5 @@ ENV PORT=8080
 # Expose the port
 EXPOSE ${PORT}
 
-# Start serve, binding to all interfaces, using the PORT
+# Serve the current directory (which contains index.html)
 CMD serve -s . -l ${PORT}
