@@ -1,23 +1,41 @@
-FROM node:18-alpine
+# Stage 1: Build the application
+FROM node:18-alpine AS builder
 
-# Install git (required by some npm dependencies)
+# Install git (required for some dependencies)
 RUN apk add --no-cache git
 
-WORKDIR /.
+WORKDIR /app
 
 # Copy package files and install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy the rest of the application source code
+# Copy the rest of the source code
 COPY . .
 
-# Apply the required "hack" to aframe-extras (as per README)
+# Apply the required "hack" to aframe-extras
 RUN sed -i '5,6s/schema: {/schema: {\n        lookAtTarget: {default: true},/' node_modules/aframe-extras/src/pathfinding/nav-agent.js && \
     sed -i '83s/if (data.lookAtTarget)/if (data.lookAtTarget)/' node_modules/aframe-extras/src/pathfinding/nav-agent.js
 
-# Expose the port used by webpack-dev-server
-EXPOSE 8080
+# Build the production bundle
+RUN npm run build
 
-# Allow any host header (disable host check)
-RUN sed -i '/devServer: {/a \    allowedHosts: "all",' webpack.config.js
+# Stage 2: Serve static files with a minimal web server
+FROM node:18-alpine
+
+# Install a lightweight static server
+RUN npm install -g serve
+
+WORKDIR /app
+
+# Copy the built files from the builder stage
+COPY --from=builder /app/dist .
+
+# Use the PORT environment variable provided by Cloud Run (default 8080)
+ENV PORT=8080
+
+# Expose the port
+EXPOSE ${PORT}
+
+# Start serve, binding to all interfaces, using the PORT
+CMD serve -s . -l ${PORT}
