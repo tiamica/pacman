@@ -4,7 +4,7 @@ FROM node:18-alpine AS builder
 # Install git (required for some dependencies)
 RUN apk add --no-cache git
 
-WORKDIR /app
+WORKDIR /.
 
 # Copy package files and install dependencies
 COPY package*.json ./
