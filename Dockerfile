@@ -17,8 +17,8 @@ RUN git clone https://github.com/Call0us-cherry/pacman1.git
 RUN cp -R pacman1/* /app/.
 
 # Apply the required "hack" to aframe-extras
-RUN sed -i '5,6s/schema: {/schema: {\n        lookAtTarget: {default: true},/' node_modules/aframe-extras/src/pathfinding/nav-agent.js && \
-    sed -i '83s/if (data.lookAtTarget)/if (data.lookAtTarget)/' node_modules/aframe-extras/src/pathfinding/nav-agent.js
+#RUN sed -i '5,6s/schema: {/schema: {\n        lookAtTarget: {default: true},/' node_modules/aframe-extras/src/pathfinding/nav-agent.js && \
+#   sed -i '83s/if (data.lookAtTarget)/if (data.lookAtTarget)/' node_modules/aframe-extras/src/pathfinding/nav-agent.js
 
 # Build the production bundle (outputs to dist/ or similar)
 RUN npm run build
