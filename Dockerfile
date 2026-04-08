@@ -19,5 +19,5 @@ RUN sed -i '5,6s/schema: {/schema: {\n        lookAtTarget: {default: true},/' n
 # Expose the port used by webpack-dev-server
 EXPOSE 8080
 
-# Start the development server, binding to 0.0.0.0 to allow external access
-CMD ["npm", "start", "--", "--host", "0.0.0.0"]
+# Start the development server with host binding and allowed hosts
+CMD ["npm", "start", "--", "--host", "0.0.0.0", "--allowed-hosts", "all"]
